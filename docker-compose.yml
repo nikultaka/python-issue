@@ -1,0 +1,29 @@
+version: "3"
+services:
+
+  app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    command: >
+      sh -c "python app/manage.py runserver 0.0.0.0:8000"
+
+# Services
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: '12345678'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+      # Where our data will be persisted
+    volumes:
+      - ./db-init:/docker-entrypoint-initdb.d
